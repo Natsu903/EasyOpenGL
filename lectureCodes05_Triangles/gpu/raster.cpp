@@ -114,9 +114,44 @@ void Raster::rasterizeTriangle(std::vector<Point>& result, const Point& v0, cons
             {
                 currentPoint.x = i;
                 currentPoint.y = j;
+                interpolantTriangle(v0, v1, v2, currentPoint);
                 result.push_back(currentPoint);
             }
 		}
     }
 
+}
+
+void Raster::interpolantTriangle(const Point& v0, const Point& v1, const Point& v2, Point& p)
+{
+    auto e1 = math::vec2f(v1.x - v0.x, v1.y - v0.y);
+    auto e2 = math::vec2f(v2.x - v0.x, v2.y - v0.y);
+    float sumArea=std::abs(math::cross(e1, e2));
+
+    //p点连向三个顶点的向量
+    auto pv0 = math::vec2f(v0.x - p.x, v0.y - p.y);
+    auto pv1 = math::vec2f(v1.x - p.x, v1.y - p.y);
+    auto pv2 = math::vec2f(v2.x - p.x, v2.y - p.y);
+
+    //划分的三个区域的面积
+    float v0area=std::abs(math::cross(pv1, pv2));
+    float v1area=std::abs(math::cross(pv0, pv2));
+    float v2area=std::abs(math::cross(pv0, pv1));
+
+    //计算三个顶点权重
+    float weight0=v0area/sumArea;
+    float weight1=v1area/sumArea;
+    float weight2=v2area/sumArea;
+
+    RGBA result;
+    auto c0=v0.color;
+    auto c1=v1.color;
+    auto c2=v2.color;
+
+    result.mR=static_cast<float>(c0.mR)*weight0+static_cast<float>(c1.mR)*weight1+static_cast<float>(c2.mR)*weight2;
+    result.mG=static_cast<float>(c0.mG)*weight0+static_cast<float>(c1.mG)*weight1+static_cast<float>(c2.mG)*weight2;
+    result.mB=static_cast<float>(c0.mB)*weight0+static_cast<float>(c1.mB)*weight1+static_cast<float>(c2.mB)*weight2;
+    result.mA=static_cast<float>(c0.mA)*weight0+static_cast<float>(c1.mA)*weight1+static_cast<float>(c2.mA)*weight2;
+
+    p.color=result;
 }

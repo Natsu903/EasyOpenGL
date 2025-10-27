@@ -8,9 +8,9 @@
 void render() {
     sgl.clear();
 
-    Point p1{ 0, 100 };
-    Point p2{ 500, 100 };
-    Point p3{ 250, 500 };
+    Point p1{ 0, 100,RGBA(255,0,0,255) };
+    Point p2{ 500, 100 ,RGBA(0,255,0,255) };
+    Point p3{ 250, 500,RGBA(0,0,255,255) };
 
     sgl.drawTriangle(p1, p2, p3);
 }

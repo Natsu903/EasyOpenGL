@@ -10,4 +10,5 @@ public:
 
     static void rasterLine(std::vector<Point>& result, const Point& v0, const Point& v1);
     static void rasterizeTriangle(std::vector<Point>& result, const Point& v0, const Point& v1, const Point& v2);
+    static void interpolantTriangle(const Point& v0, const Point& v1, const Point& v2, Point& p);
 };
